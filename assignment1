@@ -38,7 +38,7 @@ if(ch1=='l')
 	{
 	cout<<"Left is not null";	
 	insert(current->left,temp);
-	}
+	}	
 }
 else
 {
@@ -129,7 +129,7 @@ int main()
 {
 int x,ch;
 BT b;
-BT *root,*newnode;
+BT *root=nullptr,*newnode;
 do
 {
 cout<<"\n1.Create\t2.Insert\t3.Preorder\t4.Postorder\t5.Inorder\t6.Total node\t7.Leaf node\t8.Ancestor of all node\t9.Height of tree \n";
@@ -140,6 +140,10 @@ case 1: cout<<"Enter data:";
 	cin>>x;
 	root=new BT(x);break;
 case 2:
+	if(root==nullptr)
+	{
+	cout<<"Please create root node first\n";break;
+	}
 	cout<<"Enter data:";
 	cin>>x;
 	newnode=new BT(x);
