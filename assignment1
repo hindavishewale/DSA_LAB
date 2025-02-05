@@ -1,0 +1,162 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+class BT
+{
+public:
+	int data;
+	BT *left;
+	BT *right;
+	BT(int x)
+	{
+	data=x;
+	left=nullptr;
+	right=nullptr;
+	}
+	BT(){ }
+	
+	
+	
+void insert(BT *&current,BT *temp)
+{
+if(current==nullptr)
+{
+current=temp;return;
+}
+else
+{
+char ch1;
+cout<<"Enter left[l]/Right[r]:";
+cin>>ch1;
+if(ch1=='l')
+{
+	if(current->left==nullptr)
+	{
+	current->left=temp;
+	}
+	else
+	{
+	cout<<"Left is not null";	
+	insert(current->left,temp);
+	}
+}
+else
+{
+	if(current->right==nullptr)
+	{
+	current->right=temp;
+	}
+	else
+	{
+	cout<<"Right is not null";
+	insert(current->right,temp);
+	}
+}
+}
+}
+
+
+
+void preorder(BT *current)
+{
+if(current==nullptr) return;
+cout<<current->data<<endl;
+preorder(current->left);
+preorder(current->right);
+}
+
+void inorder(BT *current)
+{
+if(current==nullptr) return;
+inorder(current->left);
+cout<<current->data<<endl;
+inorder(current->right);
+}
+
+void postorder(BT *current)
+{
+if(current==nullptr) return;
+postorder(current->left);
+postorder(current->right);
+cout<<current->data<<endl;
+}
+
+int total_node(BT *root)
+{
+if(root==nullptr)
+	return 0;
+return 1+total_node(root->left)+total_node(root->right);
+}
+
+void leaf_node(BT *root)
+{
+if(root==nullptr) return;
+if(root->left==nullptr && root->right==nullptr)
+{
+cout<<root->data<<endl;
+}
+leaf_node(root->left);
+leaf_node(root->right);
+}
+
+int height_tree(BT* root) {
+    if (root == nullptr)
+        return 0;
+    return 1 + max(height_tree(root->left), height_tree(root->right));
+}
+
+
+void ancestor(BT *root,int x)
+{
+if(root==nullptr)
+return;
+if(root->data==x)
+return;
+
+ancestor(root->left,x);
+ancestor(root->right,x);
+
+
+if((root->left && root->left->data==x )|| (root->right && root->right->data==x))
+{
+cout<<root->data<<endl;
+}
+
+}
+
+};
+int main()
+{
+int x,ch;
+BT b;
+BT *root,*newnode;
+do
+{
+cout<<"\n1.Create\t2.Insert\t3.Preorder\t4.Postorder\t5.Inorder\t6.Total node\t7.Leaf node\t8.Ancestor of all node\t9.Height of tree \n";
+cin>>ch;
+switch(ch)
+{
+case 1: cout<<"Enter data:";
+	cin>>x;
+	root=new BT(x);break;
+case 2:
+	cout<<"Enter data:";
+	cin>>x;
+	newnode=new BT(x);
+	b.insert(root,newnode);
+	break;
+case 3:b.preorder(root);break;
+case 4:b.inorder(root);break;
+case 5:b.postorder(root);break;
+case 6:cout<<"Total nodes are:";
+       cout<<b.total_node(root);
+       break;
+case 7:b.leaf_node(root);break;
+case 8: cout<<"Enter node to find ancestor";
+	cin>>x;
+	b.ancestor(root,x);break;
+case 9:cout<<"Height of node:"<<b.height_tree(root)<<endl;break;
+}
+}while(ch!=0);
+return 0;
+}
