@@ -1,0 +1,185 @@
+#include <iostream>
+using namespace std;
+
+class FamilyTree {
+public:
+    string name;
+    FamilyTree* parent;
+    FamilyTree* left;  // First child
+    FamilyTree* right; // Next sibling
+
+    FamilyTree(string name) {
+        this->name = name;
+        this->parent = nullptr;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+
+    void insert(FamilyTree* root, string parentName, string childName) {
+        if (root == nullptr) return;
+
+        if (root->name == parentName) {
+            FamilyTree* newMember = new FamilyTree(childName);
+            newMember->parent = root;
+
+            if (root->left == nullptr) {
+                root->left = newMember;  // First child
+            } else {
+                FamilyTree* sibling = root->left;
+                while (sibling->right) {
+                    sibling = sibling->right;  // Go to last sibling
+                }
+                sibling->right = newMember; // Add as next sibling
+            }
+            cout << childName << " added under " << parentName << endl;
+            return;
+        }
+
+        insert(root->left, parentName, childName);  // Search in children
+        insert(root->right, parentName, childName); // Search in siblings
+    }
+
+    FamilyTree* search(FamilyTree* root, string name) {
+        if (root == nullptr) return nullptr;
+        if (root->name == name) return root;
+
+        FamilyTree* found = search(root->left, name);
+        if (found) return found;
+
+        return search(root->right, name);
+    }
+
+    void findSiblings(FamilyTree* root, string name) {
+        if (root == nullptr || root->parent == nullptr) {
+            cout << "No siblings found.\n";
+            return;
+        }
+
+        FamilyTree* sibling = root->parent->left;
+        bool found = false;
+        while (sibling) {
+            if (sibling->name != name) {
+                cout << sibling->name << " ";
+                found = true;
+            }
+            sibling = sibling->right;
+        }
+        if (!found) cout << "No siblings found.";
+        cout << endl;
+    }
+
+    void findAncestors(FamilyTree* root) {
+        if (root == nullptr || root->parent == nullptr) return;
+        cout << root->parent->name << " ";
+        findAncestors(root->parent);
+    }
+
+    void findDescendants(FamilyTree* root) {
+        if (root == nullptr) return;
+        cout << root->name << " ";
+        findDescendants(root->left);
+        findDescendants(root->right);
+    }
+
+    int countMembers(FamilyTree* root) {
+        if (root == nullptr) return 0;
+        return 1 + countMembers(root->left) + countMembers(root->right);
+    }
+
+    void preorderDisplay(FamilyTree* root) {
+        if (root == nullptr) return;
+        cout << root->name << " ";
+        preorderDisplay(root->left);
+        preorderDisplay(root->right);
+    }
+
+    ~FamilyTree() {
+        delete left;
+        delete right;
+    }
+};
+
+int main() {
+    int choice;
+    string parent, child;
+    FamilyTree* root = nullptr;
+
+    do {
+        cout << "\n1. Create Family Head\n2. Add Family Member\n3. Search Member\n4. Find Siblings\n5. Find Ancestors\n6. Find Descendants\n7. Count Family Members\n8. Display Preorder\n0. Exit\n";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter Family Head Name: ";
+                cin >> parent;
+                root = new FamilyTree(parent);
+                break;
+
+            case 2:
+                if (root == nullptr) {
+                    cout << "Create family head first!\n";
+                    break;
+                }
+                cout << "Enter Parent Name: ";
+                cin >> parent;
+                cout << "Enter Child Name: ";
+                cin >> child;
+                root->insert(root, parent, child);
+                break;
+
+            case 3:
+                cout << "Enter Member Name to Search: ";
+                cin >> parent;
+                if (root->search(root, parent)) cout << parent << " exists in the family tree.\n";
+                else cout << "Member not found.\n";
+                break;
+
+            case 4:
+                cout << "Enter Member Name: ";
+                cin >> parent;
+                {
+                    FamilyTree* member = root->search(root, parent);
+                    if (member) root->findSiblings(member, parent);
+                    else cout << "Member not found.\n";
+                }
+                break;
+
+            case 5:
+                cout << "Enter Member Name: ";
+                cin >> parent;
+                {
+                    FamilyTree* member = root->search(root, parent);
+                    if (member) {
+                        root->findAncestors(member);
+                        cout << endl;
+                    } else cout << "Member not found.\n";
+                }
+                break;
+
+            case 6:
+                cout << "Enter Member Name: ";
+                cin >> parent;
+                {
+                    FamilyTree* member = root->search(root, parent);
+                    if (member && member->left) {
+                        root->findDescendants(member->left);
+                        cout << endl;
+                    } else cout << "No descendants found.\n";
+                }
+                break;
+
+            case 7:
+                cout << "Total Family Members: " << root->countMembers(root) << endl;
+                break;
+
+            case 8:
+                cout << "Preorder Traversal: ";
+                root->preorderDisplay(root);
+                cout << endl;
+                break;
+        }
+    } while (choice != 0);
+
+    delete root;
+    return 0;
+}
