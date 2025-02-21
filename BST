@@ -1,0 +1,99 @@
+
+#include <iostream>
+using namespace std;
+class BST
+{
+public:
+    int data;
+    BST *left;
+    BST *right;
+    BST(int x)
+    {
+        data=x;
+        left=NULL;
+        right=NULL;
+    }
+};
+BST *temp,*current,*previous;
+void insert(BST *root,int key)
+{
+ if(root==NULL)
+ {
+     temp=new BST(key);
+     root=temp;
+     return;
+ }
+ else
+ {
+      current=root;
+     while(current!=NULL)
+     {
+         previous=current;
+        if(key<current->data)
+        {
+            current=current->left;
+        }
+        else
+        {
+            current=current->right;
+        }
+     }
+     temp=new BST(key);
+     {
+         if(key<previous->data)
+         {
+            previous->left=temp;
+         }
+         else
+         {
+             previous->right=temp;
+         }
+     }
+ }
+}
+
+
+void display_inorder(BST *current)
+{
+    if(current == NULL) return;
+    display_inorder(current->left);
+    cout<<current->data<<"\t";
+    display_inorder(current->right);
+}
+
+
+int main() {
+    BST *root= NULL;
+    int ch,choice,x;
+    cout<<"enter data of root node:";
+    cin>>x;
+    root=new BST(x);
+    do
+    {
+    cout<<"1.Insert\n2.Display Inorder\n";
+    cin>>ch;
+    switch(ch)
+    {
+        case 1:
+        cout<<"enter data:";
+        cin>>x; 
+        insert(root,x);
+        break;
+        case 2:
+        if(root==NULL)
+        {
+            cout<<"TREE IS EMPTY!!\n";
+        }
+        else
+        {
+        display_inorder(root);
+        break;
+        }
+    }
+        
+    cout<<"\n1 to continue:";
+    cin>>choice;
+    }while(choice==1);
+
+    return 0;
+}
