@@ -61,6 +61,30 @@ void display_inorder(BST *current)
     display_inorder(current->right);
 }
 
+BST search(BST *root,int key)
+{
+    current=root;
+    while(current!=NULL)
+    {
+        if(key==current->data)
+        {
+            cout<<"NODE IS PRESENT\n";
+            cout<<current->data<<endl;
+            return current->data;
+            
+        }
+        else if(key<current->data)
+        {
+            current=current->left;
+        }
+        else
+        {
+            current=current->right;
+        }
+    }
+    cout<<"NODE IS NOT PRSENT!!!\n";
+    return 0;
+}
 
 int main() {
     BST *root= NULL;
@@ -70,7 +94,7 @@ int main() {
     root=new BST(x);
     do
     {
-    cout<<"1.Insert\n2.Display Inorder\n";
+    cout<<"1.Insert\n2.Display Inorder\n3.search\n";
     cin>>ch;
     switch(ch)
     {
@@ -89,6 +113,10 @@ int main() {
         display_inorder(root);
         break;
         }
+        case 3:
+        cout<<"enter data to search:";
+        cin>>x; 
+        search(root,x);
     }
         
     cout<<"\n1 to continue:";
