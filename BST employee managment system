@@ -1,0 +1,116 @@
+#include <iostream>
+using namespace std;
+
+class BST
+{
+public:
+    int salary;
+    string name;
+    int id;
+    BST *left;
+    BST *right;
+
+    BST(int s, string n, int i)
+    {
+        salary = s;
+        name = n;
+        id = i;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+// Insert function with return type BST*
+BST* insert(BST* root, int s, string n, int i)
+{
+    BST *temp, *current, *previous;
+
+    if(root == NULL)
+    {
+        return new BST(s, n, i);
+    }
+
+    current = root;
+    while(current != NULL)
+    {
+        previous = current;
+        if(s < current->salary)
+        {
+            current = current->left;
+        }
+        else
+        {
+            current = current->right;
+        }
+    }
+
+    temp = new BST(s, n, i);
+    if(s < previous->salary)
+    {
+        previous->left = temp;
+    }
+    else
+    {
+        previous->right = temp;
+    }
+
+    return root;
+}
+
+
+// Inorder display function
+void display_inorder(BST *current)
+{
+    if(current == NULL) return;
+    display_inorder(current->left);
+    cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
+    display_inorder(current->right);
+}
+
+int main()
+{
+    BST *root = NULL;
+    int ch, salary, id;
+    string name;
+
+    cout << "Enter information of first employee:\n";
+    cout << "Enter name: ";
+    cin >> name;
+    cout << "Enter id: ";
+    cin >> id;
+    cout << "Enter salary: ";
+    cin >> salary;
+
+    root = new BST(salary, name, id);
+
+    do
+    {
+        cout << "1.Insert\t2.Display\t0.Exit\n";
+        cin >> ch;
+        switch(ch)
+        {
+            case 1:
+                cout << "Enter name: ";
+                cin >> name;
+                cout << "Enter id: ";
+                cin >> id;
+                cout << "Enter salary: ";
+                cin >> salary;
+                root = insert(root, salary, name, id); // Update root
+                break;
+
+            case 2:
+                if(root == NULL)
+                {
+                    cout << "TREE IS EMPTY!!\n";
+                }
+                else
+                {
+                    display_inorder(root);
+                }
+                break;
+        }
+    } while(ch != 0); // Exit condition
+
+    return 0;
+}
