@@ -1,4 +1,5 @@
 #include <iostream>
+#include<stack>
 using namespace std;
 
 class BST
@@ -59,18 +60,77 @@ BST* insert(BST* root, int s, string n, int i)
 
 
 // Inorder display function
-void display_inorder(BST *current)
+void display_inorder(BST* root)
 {
-    if(current == NULL) return;
-    display_inorder(current->left);
-    cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
-    display_inorder(current->right);
+   // if(current == NULL) return;
+    //display_inorder(current->left);
+    //cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
+    //display_inorder(current->right);
+    stack<BST* >s;
+    BST* current=root;
+    while(current!=nullptr || !s.empty())
+    {
+        while(current!=nullptr)
+        {
+            s.push(current);
+            current=current->left;
+        }
+        current=s.top();
+        s.pop();
+        cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
+        current=current->right;
+    }
+    
+}
+
+//search
+BST* search(BST *root,int key)
+{
+    BST* current=root;
+    while(current!=NULL)
+    {
+        if(key==current->id)
+        {
+            cout<<"EMPLOYEE IS PRESENT\n";
+            cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
+            return current;
+            
+        }
+        else if(key<current->id)
+        {
+            current=current->left;
+        }
+        else
+        {
+            current=current->right;
+        }
+    }
+    cout<<"EMPLOYEE IS NOT PRSENT!!!\n";
+    return NULL;
+}
+
+//update
+void update(BST* root,int key)
+{
+    BST* employee=search(root,key);
+    if(employee!=NULL)
+    {
+        cout << "Enter new name: ";
+        cin >> employee->name;
+        cout << "Enter new salary: ";
+        cin >> employee->salary;
+        cout << "Employee details updated successfully!\n";
+    }
+    else
+    {
+        cout<<"EMPLOYEE NOT FOUND!!!\n CANT UPDATE!!!";
+    }
 }
 
 int main()
 {
     BST *root = NULL;
-    int ch, salary, id;
+    int ch, salary, id,key;
     string name;
 
     cout << "Enter information of first employee:\n";
@@ -85,7 +145,7 @@ int main()
 
     do
     {
-        cout << "1.Insert\t2.Display\t0.Exit\n";
+        cout << "1.Insert\t2.Display\t3.Search\t4.update\t5.average salary\t6.maximum salary\t7.miniumum salary\8.Total no of employees\t0.Exit\n";
         cin >> ch;
         switch(ch)
         {
@@ -109,6 +169,19 @@ int main()
                     display_inorder(root);
                 }
                 break;
+            case 3:
+            cout<<"Enter id to search:";
+            cin>>key;
+            search(root,key);
+            break;
+            
+            case 4:
+             cout<<"Enter id to update:";
+            cin>>key;
+            update(root,key);
+            break;
+        
+        
         }
     } while(ch != 0); // Exit condition
 
