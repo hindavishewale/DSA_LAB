@@ -1,8 +1,8 @@
 #include <iostream>
-#include<stack>
+#include <stack>
 using namespace std;
 
-class BST
+class BST 
 {
 public:
     int salary;
@@ -11,7 +11,7 @@ public:
     BST *left;
     BST *right;
 
-    BST(int s, string n, int i)
+    BST(int s, string n, int i) 
     {
         salary = s;
         name = n;
@@ -22,115 +22,189 @@ public:
 };
 
 // Insert function with return type BST*
-BST* insert(BST* root, int s, string n, int i)
+BST* insert(BST* root, int s, string n, int i) 
 {
-    BST *temp, *current, *previous;
-
-    if(root == NULL)
-    {
+    if (root == NULL)
+     {
         return new BST(s, n, i);
     }
 
-    current = root;
-    while(current != NULL)
+    BST *current = root, *previous = NULL;
+    while (current != NULL) 
     {
         previous = current;
-        if(s < current->salary)
+        if (s < current->salary) 
         {
             current = current->left;
-        }
-        else
-        {
+        } else {
             current = current->right;
         }
     }
 
-    temp = new BST(s, n, i);
-    if(s < previous->salary)
+    BST *temp = new BST(s, n, i);
+    if (s < previous->salary) 
     {
         previous->left = temp;
-    }
-    else
-    {
+    } else {
         previous->right = temp;
     }
 
     return root;
 }
 
-
 // Inorder display function
-void display_inorder(BST* root)
+void display_inorder(BST* root) 
 {
-   // if(current == NULL) return;
-    //display_inorder(current->left);
-    //cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
-    //display_inorder(current->right);
-    stack<BST* >s;
-    BST* current=root;
-    while(current!=nullptr || !s.empty())
+    stack<BST*> s;
+    BST* current = root;
+    while (current != nullptr || !s.empty()) 
     {
-        while(current!=nullptr)
+        while (current != nullptr) 
         {
             s.push(current);
-            current=current->left;
+            current = current->left;
         }
-        current=s.top();
+        current = s.top();
         s.pop();
         cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
-        current=current->right;
+        current = current->right;
     }
-    
 }
 
-//search
-BST* search(BST *root,int key)
+// Search function (search by ID only)
+BST* search(BST *root, int key,int sal)
 {
-    BST* current=root;
-    while(current!=NULL)
-    {
-        if(key==current->id)
+    BST* current = root;
+    while (current != NULL) {
+        if (key == current->id && sal==current->salary) 
         {
-            cout<<"EMPLOYEE IS PRESENT\n";
+            cout << "EMPLOYEE IS PRESENT\n";
             cout << "NAME: " << current->name << "\tID: " << current->id << "\tSALARY: " << current->salary << endl;
             return current;
-            
-        }
-        else if(key<current->id)
-        {
-            current=current->left;
-        }
-        else
-        {
-            current=current->right;
+        } else if (key < current->salary)
+         {
+            current = current->left;
+        } else {
+            current = current->right;
         }
     }
-    cout<<"EMPLOYEE IS NOT PRSENT!!!\n";
+    cout << "EMPLOYEE IS NOT PRESENT!!!\n";
     return NULL;
 }
 
-//update
-void update(BST* root,int key)
+// Update function
+void update(BST* root, int key,int sal) 
 {
-    BST* employee=search(root,key);
-    if(employee!=NULL)
+    BST* employee = search(root, key,sal);
+    if (employee != NULL) 
     {
+    
         cout << "Enter new name: ";
         cin >> employee->name;
-        cout << "Enter new salary: ";
-        cin >> employee->salary;
         cout << "Employee details updated successfully!\n";
-    }
-    else
-    {
-        cout<<"EMPLOYEE NOT FOUND!!!\n CANT UPDATE!!!";
+    } else {
+        cout << "EMPLOYEE NOT FOUND!!!\n CANNOT UPDATE!!!";
     }
 }
 
-int main()
+void calculate_avg(BST *root, int &sum, int &count) 
+{
+    if (root == NULL) return;
+    calculate_avg(root->left, sum, count);
+    sum += root->salary;
+    count++;
+    calculate_avg(root->right, sum, count);
+}
+
+
+void find_avg(BST *root)
+ {
+    int sum = 0, count = 0;
+    calculate_avg(root, sum, count);
+
+    if (count == 0)
+        cout << "No employees found!\n";
+    else
+        cout << "Average salary: " << (sum / count) << endl;
+}
+
+
+BST* findMaxSalary(BST* root)
+ {
+    if (root == NULL || root->right == NULL)
+        return root;
+    return findMaxSalary(root->right);
+}
+
+
+BST* findMinSalary(BST* root) 
+{
+    if (root == NULL || root->left == NULL)
+        return root;
+    return findMinSalary(root->left);
+}
+
+
+int countEmployees(BST* root) 
+{
+    if (root == NULL) return 0;
+    return 1 + countEmployees(root->left) + countEmployees(root->right);
+}
+
+void reverseInorder(BST* root)
+{
+    if(root==NULL) return ;
+    
+    reverseInorder(root->right);
+    cout << "NAME: " << root->name << "\tID: " << root->id << "\tSALARY: " << root->salary << endl;
+    reverseInorder(root->left);
+}
+
+
+BST* deleteEmployee(BST* root,int key,int sal)
+{
+	if(root==NULL) return root;
+	if(sal<root->salary)
+	{
+	root->left=deleteEmployee(root->left,key,sal);
+	cout<<"details delted successfullly....\n";
+	}
+	else if(sal>root->salary)
+	{
+	root->right=deleteEmployee(root->right,key,sal);
+	cout<<"details delted successfullly....\n";
+	}
+	else
+	{
+	//one or 2 chld
+	if(root->left==NULL)
+	{
+	BST* temp=root->right;
+	delete root;
+	return temp;
+	}
+	else if(root->right==NULL)
+	{
+	BST* temp=root->left;
+	delete root;
+	return temp;
+	}
+	//node 2 child
+	BST* temp= findMinSalary(root->right);
+	root->id=temp->id;
+	root->name=temp->name;
+	root->salary=temp->salary;
+	root->right=deleteEmployee(root->right,temp->id,temp->salary);
+	
+	return temp;      
+ 	}
+ 	return root;
+}
+
+int main() 
 {
     BST *root = NULL;
-    int ch, salary, id,key;
+    int ch, salary, id, key,sal;
     string name;
 
     cout << "Enter information of first employee:\n";
@@ -143,12 +217,10 @@ int main()
 
     root = new BST(salary, name, id);
 
-    do
-    {
-        cout << "1.Insert\t2.Display\t3.Search\t4.update\t5.average salary\t6.maximum salary\t7.miniumum salary\8.Total no of employees\t0.Exit\n";
+    do {
+        cout << "\n1.Insert\n2.Display\n3.Search\n4.Update\n5.Average Salary\n6.Maximum Salary\n7.Minimum Salary\n8.Total Employees\n9.Reverse emplyee details\n10.Delete\n0.Exit\n\n";
         cin >> ch;
-        switch(ch)
-        {
+        switch (ch) {
             case 1:
                 cout << "Enter name: ";
                 cin >> name;
@@ -156,34 +228,75 @@ int main()
                 cin >> id;
                 cout << "Enter salary: ";
                 cin >> salary;
-                root = insert(root, salary, name, id); // Update root
+                root = insert(root, salary, name, id);
                 break;
 
             case 2:
-                if(root == NULL)
-                {
+                if (root == NULL) {
                     cout << "TREE IS EMPTY!!\n";
-                }
-                else
-                {
+                } else {
                     display_inorder(root);
                 }
                 break;
+
             case 3:
-            cout<<"Enter id to search:";
-            cin>>key;
-            search(root,key);
-            break;
-            
+                cout << "Enter id to search: ";
+                cin >> key;
+                cout<<"Enter salary to search: ";
+                cin>>sal;
+                search(root, key,sal);
+                break;
+
             case 4:
-             cout<<"Enter id to update:";
-            cin>>key;
-            update(root,key);
-            break;
-        
-        
+                cout << "Enter ID to update: ";
+                cin >> key;
+                update(root, key,salary);
+                break;
+
+            case 5:
+                find_avg(root);
+                break;
+
+            case 6: {
+                BST* maxEmployee = findMaxSalary(root);
+                if (maxEmployee)
+                    cout << "Max Salary Employee: " << maxEmployee->name << " - " << maxEmployee->salary << endl;
+                break;
+            }
+
+            case 7: {
+                BST* minEmployee = findMinSalary(root);
+                if (minEmployee)
+                    cout << "Min Salary Employee: " << minEmployee->name << " - " << minEmployee->salary << endl;
+                break;
+            }
+
+            case 8:
+                cout << "Total Number of Employees: " << countEmployees(root) << endl;
+                break;
+                
+            case 9:
+                  if (root == NULL) {
+                    cout << "TREE IS EMPTY!!\n";
+                } else {
+                    reverseInorder(root);
+                }
+                break;
+                
+            case 10:
+                cout << "Enter id to search: ";
+                cin >> key;
+                cout<<"Enter salary to search: ";
+                cin>>sal;
+                deleteEmployee(root, key,sal);
+                break;
+
+            case 0:
+                cout << "Exiting program...\n";
+                break;
+
         }
-    } while(ch != 0); // Exit condition
+    } while (ch != 0);
 
     return 0;
 }
