@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+
+class node
+{
+public:
+	int *next;
+	int data;
+	node(int data)
+	{
+	data=0;
+	node->next=NULL;
+	}
+	
+	void insert(int data)
+	{
+	new_node=new node(data);
+	}	
+};
+int main()
+{
+int v,e,n,i;
+int* vertex_pointer=new int[100];
+cout<<"enter number of vertex:";
+cin>>v;
+for(i=0;i<v;i++)
+{
+cout<<"enter vertex "<<i<<endl;
+cin>>vertex_pointer[i];
+}
+//for(i=0;i<n;i++)
+//{
+//cout<<vertex_pointer[i];
+//}
+
+
+
+cout<<"enter number of adjacency vertex in v:";
+cin>>n;
+for(i=0;i<n;i++)
+{
+ cout<<"enter vertex /edges adjacent to "<<e<<endl;
+insert(x);
+}
+
+
+return 0;
+}
