@@ -1,0 +1,138 @@
+#include<iostream>
+using namespace std;
+
+// Graph using Adjacency Matrix
+class AdjMatrix {
+public:
+    int vertex, edge;
+    int matrix[100][100];
+
+    AdjMatrix(int vertex, int edge) {
+        this->vertex = vertex;
+        this->edge = edge;
+        for (int i = 0; i < vertex; i++) {
+            for (int j = 0; j < vertex; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    void edgefunction(int x, int y) {
+        matrix[x][y] = 1;
+        matrix[y][x] = 1;
+    }
+
+    void display() {
+        for (int i = 0; i < vertex; i++) {
+            for (int j = 0; j < vertex; j++) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+// Node class for Adjacency List
+class node {
+public:
+    node* next;
+    int data;
+    node(int x) {
+        data = x;
+        next = NULL;
+    }
+};
+
+// Adjacency List
+class Adjlist {
+public:
+    node* head;
+    Adjlist() {
+        head = NULL;
+    }
+
+    void insert(int data) {
+        node* new_node = new node(data);
+        if (head == NULL) {
+            head = new_node;
+        } else {
+            node* temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = new_node;
+        }
+    }
+
+    void display(int v) {
+        cout << "vertex " << v << ": ";
+        node* temp = head;
+        while (temp) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int v, e, var1, var2, ch, option;
+    cout << "Enter number of vertices: ";
+    cin >> v;
+    cout << "Enter number of edges: ";
+    cin >> e;
+
+    do {
+        cout << "Choose Representation:\n1. Adjacency Matrix\n2. Adjacency List\nEnter choice: ";
+        cin >> option;
+
+        switch (option) {
+            case 1: {
+                AdjMatrix g(v, e);
+                do {
+                    cout << "Enter edge starting point and end point: ";
+                    cin >> var1 >> var2;
+                    g.edgefunction(var1, var2);
+                    cout << "Enter 1 to continue (0 to exit): ";
+                    cin >> ch;
+                } while (ch != 0);
+
+                cout << "Adjacency Matrix:\n";
+                g.display();
+                break;
+            }
+
+            case 2: {
+                int* vertex_pointer = new int[v];
+                Adjlist a[v];
+                for (int i = 0; i < v; i++) {
+                    cout << "Enter vertex " << i + 1 << ": ";
+                    cin >> vertex_pointer[i];
+                }
+
+                for (int i = 0; i < v; i++) {
+                    cout << "Enter number of adjacency vertices for " << vertex_pointer[i] << ": ";
+                    cin >> e;
+                    cout << "Enter adjacent vertices: ";
+                    for (int j = 0; j < e; j++) {
+                        cin >> var1;
+                        a[i].insert(var1);
+                    }
+                }
+
+                cout << "Adjacency List:\n";
+                for (int i = 0; i < v; i++) {
+                    a[i].display(vertex_pointer[i]);
+                }
+
+                delete[] vertex_pointer;
+                break;
+            }
+
+            default:
+                cout << "Invalid choice! Try again.\n";
+        }
+    } while (option!=0);
+
+    return 0;
+}
