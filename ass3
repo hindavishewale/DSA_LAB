@@ -1,0 +1,136 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+// Graph using Adjacency Matrix
+class AdjMatrix {
+public:
+    int cities, flights;
+    int matrix[100][100];
+    string cityNames[100];
+
+    AdjMatrix(int cities, int flights) {
+        this->cities = cities;
+        this->flights = flights;
+        for (int i = 0; i < cities; i++) {
+            for (int j = 0; j < cities; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    void addFlight(int src, int dest, int cost) {
+        matrix[src][dest] = cost;
+        matrix[dest][src] = cost;
+    }
+
+    void display() {
+        cout << "\nAdjacency Matrix Representation (Flight Costs):\n";
+        for (int i = 0; i < cities; i++) {
+            for (int j = 0; j < cities; j++) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+// Node class for Adjacency List
+class Node {
+public:
+    Node* next;
+    int destination, cost;
+    Node(int dest, int cost) {
+        destination = dest;
+        this->cost = cost;
+        next = NULL;
+    }
+};
+
+// Adjacency List
+class AdjList {
+public:
+    Node* head;
+    AdjList() {
+        head = NULL;
+    }
+
+    void insert(int dest, int cost) {
+        Node* new_node = new Node(dest, cost);
+        if (head == NULL) {
+            head = new_node;
+        } else {
+            Node* temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = new_node;
+        }
+    }
+
+    void display(string cityName, string cityNames[]) {
+        cout << "\nFlights from " << cityName << ": ";
+        Node* temp = head;
+        while (temp) {
+            cout << "(To: " << cityNames[temp->destination] << ", Cost: " << temp->cost << ") ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int cities, flights, src, dest, cost, choice;
+    cout << "Enter number of cities: ";
+    cin >> cities;
+    cout << "Enter number of flights: ";
+    cin >> flights;
+
+    string cityNames[100];
+    for (int i = 0; i < cities; i++) {
+        cout << "Enter name of city " << i + 1 << ": ";
+        cin >> cityNames[i];
+    }
+
+    do {
+        cout << "\nChoose Representation:\n1. Adjacency Matrix\n2. Adjacency List\n0. Exit\nEnter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                AdjMatrix graph(cities, flights);
+                for (int i = 0; i < flights; i++) {
+                    cout << "Enter flight (Source City Index, Destination City Index, Cost): ";
+                    cin >> src >> dest >> cost;
+                    graph.addFlight(src, dest, cost);
+                }
+                graph.display();
+                break;
+            }
+
+            case 2: {
+                AdjList adjList[cities];
+                for (int i = 0; i < flights; i++) {
+                    cout << "Enter flight (Source City Index, Destination City Index, Cost): ";
+                    cin >> src >> dest >> cost;
+                    adjList[src].insert(dest, cost);
+                    adjList[dest].insert(src, cost);
+                }
+                cout << "\nAdjacency List Representation:\n";
+                for (int i = 0; i < cities; i++) {
+                    adjList[i].display(cityNames[i], cityNames);
+                }
+                break;
+            }
+
+            case 0:
+                cout << "Exiting program...\n";
+                break;
+
+            default:
+                cout << "Invalid choice! Try again.\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}
