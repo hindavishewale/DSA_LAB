@@ -1,0 +1,112 @@
+#include <iostream>
+using namespace std;
+#include<stack>
+class bt
+{
+public:
+    int data;
+    bt* left;
+    bt* right;
+    bt(int x)
+    {
+     data=x;
+     left=NULL;
+     right=NULL;
+    }
+};
+
+void preorder(bt* root)
+{
+    if(root==NULL) return;
+    stack <bt* >s;
+    s.push(root);
+    bt* current;
+    while(!s.empty())
+    {
+        current=s.top();
+        s.pop();
+        cout<<current->data;
+        if(current->right!=NULL)
+        {
+            s.push(current->right);
+        }
+        if(current->left!=NULL)
+        {
+            s.push(current->left);
+        }
+    }
+}
+
+void inorder(bt* root)
+{
+    if(root==NULL) return;
+    stack <bt* >s;
+    bt* current=root;
+    while(current!=NULL || !s.empty())
+    {
+        while(current!=NULL)
+        {
+            s.push(current);
+            current=current->left;
+        }
+        current=s.top();
+        s.pop();
+        cout<<current->data;
+        current=current->right;
+    }
+}
+
+void postorder(bt* root)
+{
+    if(root==NULL) return;
+    stack<bt* >s1;
+    stack<bt* >s2;
+    s1.push(root);
+    bt* current;
+    while(!s1.empty())
+    {
+        current=s1.top();
+        s1.pop();
+        s2.push(current);
+        if(current->left!=NULL)
+        {
+            s1.push(current->left);
+        }
+        if(current->right!=NULL)
+        {
+            s1.push(current->right);
+        }
+    }
+    while(!s2.empty())
+    {
+        current=s2.top();
+        cout<<current->data;
+        s2.pop();
+    }
+}
+
+int main() {
+    bt* root = new bt(1);
+    root->left = new bt(2);
+    root->right = new bt(3);
+    root->left->left = new bt(4);
+    root->left->right = new bt(5);
+    root->right->left = new bt(6);
+    root->right->right = new bt(7);
+
+    cout << "Preorder Traversal: ";
+    preorder(root);
+    cout << endl;
+
+    cout << "Inorder Traversal: ";
+    inorder(root);
+    cout << endl;
+
+    cout << "Postorder Traversal: ";
+    postorder(root);
+    cout << endl;
+
+    
+
+    return 0;
+}
