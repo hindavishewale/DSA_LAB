@@ -1,40 +1,74 @@
 #include<iostream>
 using namespace std;
-class student
-{
+
+class HashTable {
 public:
-	string id;
-	string name;
+    int index[10];
+    int data[10];
+    int size;
+
+    HashTable(int size) 
+    {
+     this->size=size;
+     for(int i=0;i<size;i++) 
+     {
+       index[i]=-1;
+       data[i]=-1;
+     }
+    }
+
+    int hashfunction(int value) 
+    {
+        return value%size;
+    }
+
+    void insert(int value)
+    {
+        int i=hashfunction(value);
+        int start=i;
+
+        while (data[i]!=-1)
+        {
+            i=(i+1)%size;
+            if(i==start) 
+            {
+             cout<<"Hash table is full!"<<endl;
+             return;
+            }
+        }
+
+        index[i]=i;
+        data[i]=value;
+    }
+
+    void display() 
+    {
+        cout << "\nIndex\tData\n";
+        for (int i=0;i<size;i++) 
+        {
+         cout<<index[i]<<"\t"<<data[i]<<endl;
+        }
+    }
 };
-class hashtable
-{
-public:
-	student s1[10];
-	student s2[10];
-	
-void create(int r,string n)
-{
-}
 
-void ascii(string id)
-{
-int c;
-for(int i=0;i<id.size();i++)
-{
-    int cnt=int(id[i]);
-    cout<<"acii of "<<id[i]<<cnt<<endl;
-    c+=cnt;
-}
-    cout<<"total ascii value of string :"<<c;
-}
+int main() {
 
+    int n;
 
-};
-int main()
-{
-hashtable h;
+    cout<< "Enter size of hashtable: ";
+    cin>>n;
 
+    HashTable h(n);
 
-return 0
+    for (int i=0;i<n;i++) 
+    {
+        int value;
+        cout<<"Enter value"<<i+1<<":";
+        cin>>value;
+        h.insert(value);
+    }
 
+    h.display();
+
+    return 0;
 }
