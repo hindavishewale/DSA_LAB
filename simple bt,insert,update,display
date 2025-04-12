@@ -1,0 +1,101 @@
+#include <iostream>
+using namespace std;
+class BT
+{
+    public:
+        string name;
+        int roll;
+        BT* left;
+        BT* right;
+        BT(string n,int r)
+        {
+            name=n;
+            roll=r;
+            left=nullptr;
+            right=nullptr;
+        }
+        void insert(BT* &root,string n,int r)
+        {
+            if(root==nullptr)
+            {
+                root=new BT(n,r);
+                return;
+            }
+            char ch;
+            cout<<"enter l or r : ";
+            cin>>ch;
+            if(ch=='l')
+            {
+                insert(root->left,n,r);
+            }
+            else if(ch=='r')
+            {
+                insert(root->right,n,r);
+            }
+        }
+        
+        void display(BT* root)
+        {
+            if(root==nullptr) return;
+            cout<<"name: "<<root->name<<"\t"<<"roll no: "<<root->roll<<endl;
+            display(root->left);
+            display(root->right);
+        }
+      
+      void update(BT* &root,string oldname,int oldroll,int &f)
+      {
+          if(root==nullptr) return;
+          if(root->name==oldname && root->roll==oldroll)
+          {
+          cout<<"enter new name : ";
+          cin>>root->name;
+          cout<<"enter new roll: ";
+          cin>>root->roll;
+          f=1;
+          return;
+          }
+          update(root->left,oldname,oldroll,f);
+          update(root->right,oldname,oldroll,f);
+      }
+    
+};
+int main() 
+{ 
+    BT* root=nullptr;
+    BT b(" ",0);
+    string name;
+    int roll;
+    int ch;
+    do
+    {
+     cout<<"\n1.insert\n2.display\n3.update\n" ;
+     cin>>ch;
+     switch(ch)
+     {
+         case 1:
+                cout<<"enter name: ";
+                cin>>name;
+                cout<<"enter roll no: ";
+                cin>>roll;
+                b.insert(root,name,roll);
+                break;
+        case 2:
+                b.display(root);
+                break;
+        case 3:
+                int f=0;
+                cout<<"enter name  and roll to update: ";
+                cin>>name>>roll;
+                b.update(root,name,roll,f);
+                if(f==0)
+                {
+                    cout<<"no name and roll to update!!!";
+                }
+                break;
+         
+     }
+    }while(ch!=4);
+   
+
+    return 0;
+}
