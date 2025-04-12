@@ -1,74 +1,78 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
-
-class HashTable {
-public:
-    int index[10];
-    int data[10];
-    int size;
-
-    HashTable(int size) 
-    {
-     this->size=size;
-     for(int i=0;i<size;i++) 
-     {
-       index[i]=-1;
-       data[i]=-1;
-     }
-    }
-
-    int hashfunction(int value) 
-    {
-        return value%size;
-    }
-
-    void insert(int value)
-    {
-        int i=hashfunction(value);
-        int start=i;
-
-        while (data[i]!=-1)
+class Data
+{
+    public:
+        int roll;
+        string name;
+        
+        Data()
         {
-            i=(i+1)%size;
-            if(i==start) 
+            roll=-1;
+            name="";
+        }
+        
+};
+class Hash
+{  
+public:
+    static const int size=10;
+    Data d[size];
+    int hashfunction(int key)
+    {
+       return key%size;  
+    }
+    
+    void insert(string name, int roll)
+    {
+        int index=hashfunction(roll);
+        int startindex=index;
+        
+        while(d[index].roll!=-1)
+        {
+            index=(index+1)%size;
+            if(startindex==index)
             {
-             cout<<"Hash table is full!"<<endl;
-             return;
+                cout<<"hash table full!!";
+                return ;
             }
         }
-
-        index[i]=i;
-        data[i]=value;
+        d[index].name=name;
+        d[index].roll=roll;
     }
-
-    void display() 
+    void display()
     {
-        cout << "\nIndex\tData\n";
-        for (int i=0;i<size;i++) 
+        for(int i=0;i<size;i++)
         {
-         cout<<index[i]<<"\t"<<data[i]<<endl;
-        }
+            if(d[i].roll!=-1)
+            {
+                cout<<"index"<<i<<"\t"<<"roll number:"<<d[i].roll<<"\t"<<"name:"<<d[i].name<<endl;  
+            }
+            else
+            {
+                cout<<"index"<<i<<"\t"<<"empty"<<endl;
+            }
     }
-};
-
-int main() {
-
-    int n;
-
-    cout<< "Enter size of hashtable: ";
-    cin>>n;
-
-    HashTable h(n);
-
-    for (int i=0;i<n;i++) 
-    {
-        int value;
-        cout<<"Enter value"<<i+1<<":";
-        cin>>value;
-        h.insert(value);
-    }
-
-    h.display();
+    }    
+};    
+int main() 
+{
+     Hash h;
+     string name;
+     int rn,n;
+     cout<<"enter number of student: ";
+     cin>>n;
+     for(int i=0;i<n;i++)
+     {
+     cout<<"enter roll number: ";
+     cin>>rn;
+     cout<<"enter name: ";
+     cin>>name;
+     h.insert(name,rn);
+     }
+    
+     h.display();
+     
 
     return 0;
 }
