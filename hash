@@ -3,76 +3,117 @@ using namespace std;
 class Data
 {
     public:
-        int roll;
-        string name;
-        
+        int data,flag;
         Data()
         {
-            roll=-1;
-            name="";
+            flag=0;
         }
-        
 };
 class Hash
-{  
-public:
-    static const int size=10;
-    Data d[size];
-    int hashfunction(int key)
-    {
-       return key%size;  
-    }
-    
-    void insert(string name, int roll)
-    {
-        int index=hashfunction(roll);
-        int startindex=index;
-        
-        while(d[index].roll!=-1)
-        {
-            index=(index+1)%size;
-            if(startindex==index)
+{
+    public:
+            int size;
+            Data* d;
+            Hash(int s)
             {
-                cout<<"hash table full!!";
-                return ;
+                //s=10;
+                size=s;
+                d =new Data[size];
             }
-        }
-        d[index].name=name;
-        d[index].roll=roll;
-    }
-    void display()
-    {
-        for(int i=0;i<size;i++)
-        {
-            if(d[i].roll!=-1)
+            int Hashfunction(int key)
             {
-                cout<<"index"<<i<<"\t"<<"roll number:"<<d[i].roll<<"\t"<<"name:"<<d[i].name<<endl;  
+                return key%size;
             }
-            else
+            float Loadfactor()
             {
-                cout<<"index"<<i<<"\t"<<"empty"<<endl;
+                int count=0;
+                for(int i=0;i<size;i++)
+                {
+                    if(d[i].flag==1) count++;
+                }
+                return float(count)/size;
             }
-    }
-    }    
-};    
+            void Rehash()
+            {
+                int oldsize=size;
+                size=size*2;
+                Data* temp=new Data[size];
+                for(int i=0;i<size;i++)
+                {
+                    if(d[i].flag==1)
+                    {
+                        int index=d[i].data%size;
+                        for(int j=0;j<size;j++)
+                        {
+                          int probeindex=(index+j)%size;
+                          if(temp[probeindex].flag==0)
+                          {
+                              temp[probeindex]=d[i];
+                              break;
+                          }
+                        }
+                    }
+                }
+                delete[] d;
+                d=temp;
+            }
+            void insert(int data)
+            {
+             if(Loadfactor() >=0.75)
+             {
+                 cout<<"rehashing should be done!!!";
+                 Rehash();
+             }
+             int index=Hashfunction(data);
+             for(int i=0;i<size;i++)
+             {
+                 int probeindex=(index+i)%size;
+                 if(d[probeindex].flag==0)
+                 {
+                     d[probeindex].data=data;
+                     d[probeindex].flag=1;
+                     return;
+                 }
+             }
+             cout<<"insertion failed!!";
+            }
+            
+            void display()
+            {
+            for(int i=0;i<size;i++)
+            {
+                if(d[i].flag==1)
+                {
+                    cout<<"index "<<i<<"data "<<d[i].data<<endl;
+                }
+                else
+                {
+                    cout<<"index "<<i<<"data "<<"empty"<<endl;
+                }
+            }
+            }
+            
+             ~Hash() 
+             {
+              delete[] d; 
+             }
+};
 int main() 
 {
-     Hash h;
-     string name;
-     int rn,n;
-     cout<<"enter number of student: ";
-     cin>>n;
-     for(int i=0;i<n;i++)
-     {
-     cout<<"enter roll number: ";
-     cin>>rn;
-     cout<<"enter name: ";
-     cin>>name;
-     h.insert(name,rn);
-     }
-    
-     h.display();
-     
+    int s;
+    cout<<"enter size of hash table: ";
+    cin>>s;
+    Hash h(s);
+    int n,data;
+    cout<<"Enter data number: ";
+    cin>>n;
+    for(int i=0;i<n;i++)
+    {
+        cin>>data;
+        h.insert(data);
+    }
+    h.display();
+      
 
     return 0;
 }
