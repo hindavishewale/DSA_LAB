@@ -1,0 +1,158 @@
+#include <iostream>
+using namespace std;
+class Data
+{
+    public:
+        int data,flag;
+        Data()
+        {
+            flag=0;
+        }
+};
+class Hash
+{
+    public:
+            int size;
+            Data* d;
+            
+            Hash(int s)
+            {
+                //s=10;
+                size=s;
+                d =new Data[size];
+            }
+            
+            int Hashfunction(int key)
+            {
+                return key%size;
+            }
+            
+            float Loadfactor()
+            {
+                int count=0;
+                for(int i=0;i<size;i++)
+                {
+                    if(d[i].flag==1) count++;
+                }
+                return float(count)/size;
+            }
+            
+            void Rehash()
+            {
+                int oldsize=size;
+                Data* olddata=d;
+                size=size*2;
+                Data* temp=new Data[size];
+                for(int i=0;i<oldsize;i++)
+                {
+                    temp[i].flag=0;
+                }
+                for(int i=0;i<oldsize;i++)
+                {
+                    if(olddata[i].flag==1)
+                    {
+                        int index=olddata[i].data%size;
+                        for(int j=0;j<size;j++)
+                        {
+                          int probeindex=(index+j)%size;
+                          if(temp[probeindex].flag==0)
+                          {
+                              temp[probeindex]=olddata[i];
+                              break;
+                          }
+                        }
+                    }
+                }
+                delete[] olddata;
+                d=temp;
+            }
+            
+            void insert(int data)
+            {
+             if(Loadfactor() >=0.75)
+             {
+                 cout<<"rehashing is done!!!\n";
+                 Rehash();
+             }
+             int index=Hashfunction(data);
+             for(int i=0;i<size;i++)
+             {
+                 int probeindex=(index+i)%size;
+                 if(d[probeindex].flag==0)
+                 {
+                     d[probeindex].data=data;
+                     d[probeindex].flag=1;
+                     return;
+                 }
+             }
+             cout<<"insertion failed!!\n";
+            }
+            
+            void display()
+            {
+            for(int i=0;i<size;i++)
+            {
+                if(d[i].flag==1)
+                {
+                    cout<<"index: "<<i<<" data: "<<d[i].data<<endl;
+                }
+                else
+                {
+                    cout<<"index: "<<i<<" data: "<<"empty"<<endl;
+                }
+            }
+            }
+                  
+             ~Hash() 
+             {
+              delete[] d; 
+             }
+             
+            
+            void update(int data)
+            {
+            int newdata;
+            for(int i=0;i<size;i++)
+            {
+            if(d[i].flag==1)
+            {
+            if(d[i].data == data)
+            {
+            cout<<"enter new data: ";
+            cin>>newdata;
+            d[i].data=newdata;
+            }
+            }     
+            }  
+            }
+             
+};
+int main() 
+{
+	int data;
+	int s;
+   	cout<<"enter size of hash table: ";
+    	cin>>s;
+    	Hash h(s);
+	int ch;
+	do
+	{
+	cout<<"1.insert\n2.display\n3.update\n\n";
+	cin>>ch;
+	switch(ch)
+	{
+	case 1:	cout<<"enter data: ";
+		cin>>data;
+		h.insert(data);break;
+	case 2:h.display(); break;
+	case 3:	
+		cout<<"enter data to update: ";
+		cin>>data;
+		h.update(data);
+		break;
+	}
+	}while(ch!=4);
+	
+
+    return 0;
+}
