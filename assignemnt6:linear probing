@@ -1,0 +1,170 @@
+#include <iostream>
+using namespace std;
+class Hash
+{
+    public:
+        string name,album,artist,id;
+};
+class HashTable
+{
+  public:
+        Hash h[10];
+        int a[10];
+        HashTable()
+        {
+            for(int i=0;i<10;i++)
+            {
+                a[i]=-1;
+            }
+        }
+        
+        int ascii(string id)
+        {
+            int count=0;
+            for(int i=0;i<id.size();i++)
+            {
+                count+=int(id[i]);
+            }
+            return count;
+        }
+        int hashfunction(string id)
+        {
+            int index=ascii(id);
+            return index%10;
+        }
+        
+        
+        
+        void insert(string id,string name,string album,string artist)
+        {
+            int index=hashfunction(id);
+            
+          for(int i=0;i<10;i++)
+          {
+              int probeindex=(index+i)%10;
+              if(a[probeindex]!=-1)
+              {
+                  cout<<"collosion occurs at: "<<probeindex<<endl;
+              }
+              if(a[probeindex]==-1)
+              {
+                h[probeindex].id=id;
+                h[probeindex].name=name;
+                h[probeindex].album=album;
+                h[probeindex].artist=artist;
+                a[probeindex]=1;
+                cout<<"data inserted at index: "<<probeindex<<endl;
+                return;
+              }
+          }
+          cout<<"Hash table full!!!";
+        }
+        
+        
+        void display()
+        {
+            for(int i=0;i<10;i++)
+            {
+                if(a[i]!=-1)
+                {
+cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"album: "<<h[i].album<<"\t"<<"artist: "<<h[i].artist<<endl;
+                }
+                else
+                {
+                    cout<<"Index "<<i<<": "<<"empty"<<endl;
+                }
+            }
+        }
+        
+        
+        void Delete(string id)
+        {
+            int index=hashfunction(id);
+            for(int i=0;i<10;i++)
+            {
+                int probeindex=(index+i)%10;
+                if(a[probeindex]==1 && h[probeindex].id==id)
+                {
+                a[probeindex]=-2;    
+                }
+                cout<<"element deleted at index: "<<probeindex<<endl;
+                return;
+            }
+            cout << "element not found!" << endl;
+         
+        }
+        
+        
+        void update(string id)
+        {
+            string newid,newname,newalbum,newartist;
+            int index=hashfunction(id);
+            for(int i=0;i<10;i++)
+            {
+                int probeindex=(index+i)%10;
+                if(a[probeindex]==1 && h[probeindex].id==id)
+                {
+                cout<<"Enter new id: ";
+                cin>>newid;
+                cout<<"Enter new name: ";
+                cin>>newname;
+                cout<<"Enter new album: ";
+                cin>>newalbum;
+                cout<<"Enter new artist: ";
+                cin>>newartist;
+                h[probeindex].id=newid;
+                h[probeindex].name=newname;
+                h[probeindex].album=newalbum;
+                h[probeindex].artist=newartist;
+                cout<<"Record updated at index"<<probeindex<<endl;
+                return;
+                }
+            }
+            cout<<"data not found!!!";
+        }
+        
+};
+int main()
+{
+    
+  HashTable table;
+  int ch;
+  string id, name,album,artist;
+  
+  do
+  {
+      cout<<"1.Insert\n2.Display\n3.update\n4.delete\n";
+      cin>>ch;
+      switch(ch)
+      {
+          
+        case 1:
+                cout<<"Enter id: ";
+                cin>>id;
+                cout<<"Enter name: ";
+                cin>>name;
+                cout<<"Enter album: ";
+                cin>>album;
+                cout<<"Enter artist: ";
+                cin>>artist;
+                table.insert(id,name,album,artist);
+                break;
+                
+        case 2:table.display();
+                break;
+        
+        case 3: cout<<"Enter id to update: ";
+                cin>>id;
+                table.update(id);
+                break;
+        case 4: cout<<"Enter id to delete: ";
+                cin>>id;
+                table.Delete(id);
+                break;
+                
+      }
+      
+  }while(ch!=5);
+
+    return 0;
+}
