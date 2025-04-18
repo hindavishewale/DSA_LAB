@@ -65,7 +65,7 @@ class HashTable
         {
             for(int i=0;i<10;i++)
             {
-                if(a[i]==1 || a[i]==-2)
+                if(a[i]==1)
                 {
 cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"album: "<<h[i].album<<"\t"<<"artist: "<<h[i].artist<<endl;
                 }
@@ -87,9 +87,10 @@ cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"albu
                 {
                 a[probeindex]=-2;
                 h[probeindex]={ };
-                }
                 cout<<"element deleted at index: "<<probeindex<<endl;
                 return;
+                }
+               
             }
             cout << "element not found!" << endl;
          
