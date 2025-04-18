@@ -46,7 +46,7 @@ class HashTable
               {
                   cout<<"collosion occurs at: "<<probeindex<<endl;
               }
-              if(a[probeindex]==-1)
+              if(a[probeindex]==-1 || a[probeindex]==-2 )
               {
                 h[probeindex].id=id;
                 h[probeindex].name=name;
@@ -65,7 +65,7 @@ class HashTable
         {
             for(int i=0;i<10;i++)
             {
-                if(a[i]!=-1)
+                if(a[i]==1)
                 {
 cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"album: "<<h[i].album<<"\t"<<"artist: "<<h[i].artist<<endl;
                 }
@@ -85,7 +85,8 @@ cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"albu
                 int probeindex=(index+i)%10;
                 if(a[probeindex]==1 && h[probeindex].id==id)
                 {
-                a[probeindex]=-2;    
+                a[probeindex]=-2;
+                h[probeindex]={ };
                 }
                 cout<<"element deleted at index: "<<probeindex<<endl;
                 return;
@@ -127,13 +128,13 @@ cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"albu
         void search(string id)
         {
             int index=hashfunction(id);
-            for(int i=0;i<!0;i++)
+            for(int i=0;i<10;i++)
             {
                 int probeindex=(index+i)%10;
                 if(a[probeindex]==1 && h[probeindex].id==id)
                 {
                     cout<<"Data found!!!"<<endl;
-                    cout<<"Index "<<i<<":->"<<"id: "<<h[i].id<<"\t"<<"name:"<<h[i].name<<"\t"<<"album: "<<h[i].album<<"\t"<<"artist: "<<h[i].artist<<endl;
+cout<<"Index "<<probeindex<<":->"<<"id: "<<h[probeindex].id<<"\t"<<"name:"<<h[probeindex].name<<"\t"<<"album: "<<h[probeindex].album<<"\t"<<"artist: "<<h[probeindex].artist<<endl;
                     return;
                 }
             }
