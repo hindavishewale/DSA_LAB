@@ -1,0 +1,72 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+class OBST
+{
+    public:
+    
+        int n;
+        float q[10];
+        float p[10];
+        float w[10][10];
+        float c[10][10];
+        int r[10][10];
+        
+        
+        void accept()
+        {
+        cout<<"enter number of keys: ";
+        cin>>n;
+        cout<<"enter "<<n<<" successsful probability: ";
+        for(int i=0;i<n;i++)
+        {
+            cin>>p[i];
+        }
+        cout<<"enter"<<n+1<<" unsuccesful probability: ";
+        for(int i=0;i<=n;i++)
+        {
+            cin>>q[i];
+        }   
+        }
+        void weight()
+        {
+            for(int i=0;i<=n;i++)
+            {
+                w[i][i]=q[i];
+            }
+            for(int i=0;i<=n;i++)
+            {
+                for(int j=i+1;j<=n;j++)
+                {
+                    w[i][j]=w[i][j-1]+p[j-1]+q[j];
+                }
+            }
+        }
+        void displayweight()
+        {
+            for(int i=0;i<=n;i++)
+            {
+            for(int j=0;j<=n;j++)
+            {
+                if(j>=i)
+                {
+                    cout<<fixed<<setprecision(1)<<w[i][j]<<"\t";
+                }
+                else
+                {
+                    cout<<"  ";
+                }
+            }
+            cout<<endl;
+            }
+        }
+};
+int main()
+{
+    OBST o;
+    o.accept();
+    o.weight();
+    o.displayweight();
+    
+    return 0;
+}
