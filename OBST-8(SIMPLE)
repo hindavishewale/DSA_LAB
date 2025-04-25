@@ -30,19 +30,24 @@ public:
         }
 
         // Fill weight matrix
-        for (int i = 0; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
-                w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
+                if (j == i + 1) {
+                    w[i][j] = p[i] + q[i] + q[j];
+                } else {
+                    w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
+                }
             }
         }
 
         // OBST main logic using i, j, k loops
-        for (int diff = 1; diff <= n; diff++) {     // diff = j - i
+        for (int diff = 1; diff <= n; diff++) {  // diff = j - i
             for (int i = 0; i <= n - diff; i++) {
                 int j = i + diff;
-                float minCost = 9999;
-                int bestRoot = 0;
+                float minCost = 9999999;  // large number to initialize minCost
+                int bestRoot = i + 1;  // root must be between i and j
 
+                // Try every root in range [i, j]
                 for (int k = i + 1; k <= j; k++) {
                     float cost = c[i][k - 1] + c[k][j];
                     if (cost < minCost) {
