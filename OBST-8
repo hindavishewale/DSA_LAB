@@ -1,72 +1,133 @@
 #include<iostream>
 #include<iomanip>
 using namespace std;
+
 class OBST
 {
-    public:
-    
-        int n;
-        float q[10];
-        float p[10];
-        float w[10][10];
-        float c[10][10];
-        int r[10][10];
-        
-        
-        void accept()
+public:
+    int n;
+    float q[10];
+    float p[10];
+    float w[10][10];
+    float c[10][10];
+
+    void accept()
+    {
+        cout << "Enter number of keys: ";
+        cin >> n;
+
+        cout << "Enter " << n << " successful probabilities: ";
+        for (int i = 0; i < n; i++)
         {
-        cout<<"enter number of keys: ";
-        cin>>n;
-        cout<<"enter "<<n<<" successsful probability: ";
-        for(int i=0;i<n;i++)
-        {
-            cin>>p[i];
+            cin >> p[i];
         }
-        cout<<"enter"<<n+1<<" unsuccesful probability: ";
-        for(int i=0;i<=n;i++)
+
+        cout << "Enter " << n + 1 << " unsuccessful probabilities: ";
+        for (int i = 0; i <= n; i++)
         {
-            cin>>q[i];
-        }   
+            cin >> q[i];
         }
-        void weight()
+    }
+
+    void weight_calculate()
+    {
+        for (int i = 0; i <= n; i++)
         {
-            for(int i=0;i<=n;i++)
+            w[i][i] = q[i];
+        }
+
+        for (int i = 0; i <= n; i++)
+        {
+            for (int j = i + 1; j <= n; j++)
             {
-                w[i][i]=q[i];
+                w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
             }
-            for(int i=0;i<=n;i++)
+        }
+    }
+
+    void cost_calculate()
+    {
+        for (int i = 0; i <= n; i++)
+        {
+            c[i][i] = 0;
+        }
+
+        for (int len = 1; len <= n; len++)
+        {
+            for (int i = 0; i <= n - len; i++)
             {
-                for(int j=i+1;j<=n;j++)
+                int j = i + len;
+                float mincost = 9999;
+                for (int k = i + 1; k <= j; k++)
                 {
-                    w[i][j]=w[i][j-1]+p[j-1]+q[j];
+                    float cost = c[i][k - 1] + c[k][j];
+                    if (cost < mincost)
+                    {
+                        mincost = cost;
+                    }
                 }
+                c[i][j] = mincost + w[i][j];
             }
         }
-        void displayweight()
+    }
+
+    void displayWeight()
+    {
+        cout << "\nWeight Matrix (w[i][j]):\n\n";
+        cout << setw(6) << " ";
+        for (int j = 0; j <= n; j++)
         {
-            for(int i=0;i<=n;i++)
+            cout << setw(8) << j;
+        }
+        cout << endl;
+
+        for (int i = 0; i <= n; i++)
+        {
+            cout << setw(6) << i;
+            for (int j = 0; j <= n; j++)
             {
-            for(int j=0;j<=n;j++)
-            {
-                if(j>=i)
-                {
-                    cout<<fixed<<setprecision(1)<<w[i][j]<<"\t";
-                }
+                if (j >= i)
+                    cout << setw(8) << fixed << setprecision(2) << w[i][j];
                 else
-                {
-                    cout<<"  ";
-                }
+                    cout << setw(8) << " ";
             }
-            cout<<endl;
-            }
+            cout << endl;
         }
+    }
+
+    void displayCost()
+    {
+        cout << "\nCost Matrix (c[i][j]):\n\n";
+        cout << setw(6) << " ";
+        for (int j = 0; j <= n; j++)
+        {
+            cout << setw(8) << j;
+        }
+        cout << endl;
+
+        for (int i = 0; i <= n; i++)
+        {
+            cout << setw(6) << i;
+            for (int j = 0; j <= n; j++)
+            {
+                if (j >= i)
+                    cout << setw(8) << fixed << setprecision(2) << c[i][j];
+                else
+                    cout << setw(8) << " ";
+            }
+            cout << endl;
+        }
+    }
 };
+
 int main()
 {
     OBST o;
     o.accept();
-    o.weight();
-    o.displayweight();
-    
+    o.weight_calculate();
+    o.cost_calculate();
+    o.displayWeight();
+    o.displayCost();
+
     return 0;
 }
