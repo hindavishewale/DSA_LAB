@@ -22,25 +22,25 @@ public:
     }
 
     void calculateOBST() {
-        // Initialize diagonal values
+        // Initialize diagonals
         for (int i = 0; i <= n; i++) {
             w[i][i] = q[i];
             c[i][i] = 0;
             r[i][i] = 0;
         }
 
-        // Calculate weight matrix
+        // Fill weight matrix
         for (int i = 0; i <= n; i++) {
             for (int j = i + 1; j <= n; j++) {
                 w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
             }
         }
 
-        // Calculate cost and root matrices
-        for (int len = 1; len <= n; len++) {
-            for (int i = 0; i <= n - len; i++) {
-                int j = i + len;
-                float minCost = 1e9;
+        // OBST main logic using i, j, k loops
+        for (int diff = 1; diff <= n; diff++) {     // diff = j - i
+            for (int i = 0; i <= n - diff; i++) {
+                int j = i + diff;
+                float minCost = 9999;
                 int bestRoot = 0;
 
                 for (int k = i + 1; k <= j; k++) {
