@@ -1,0 +1,117 @@
+#include <iostream>
+using namespace std;
+
+class OBST {
+public:
+    int n;
+    float p[10], q[10];
+    float w[10][10], c[10][10];
+    int r[10][10];
+
+    void acceptData() {
+        cout << "Enter number of keys: ";
+        cin >> n;
+
+        cout << "Enter " << n << " successful probabilities:\n";
+        for (int i = 0; i < n; i++)
+            cin >> p[i];
+
+        cout << "Enter " << n + 1 << " unsuccessful probabilities:\n";
+        for (int i = 0; i <= n; i++)
+            cin >> q[i];
+    }
+
+    void calculateOBST() {
+        // Initialize diagonal values
+        for (int i = 0; i <= n; i++) {
+            w[i][i] = q[i];
+            c[i][i] = 0;
+            r[i][i] = 0;
+        }
+
+        // Calculate weight matrix
+        for (int i = 0; i <= n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
+            }
+        }
+
+        // Calculate cost and root matrices
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                int j = i + len;
+                float minCost = 1e9;
+                int bestRoot = 0;
+
+                for (int k = i + 1; k <= j; k++) {
+                    float cost = c[i][k - 1] + c[k][j];
+                    if (cost < minCost) {
+                        minCost = cost;
+                        bestRoot = k;
+                    }
+                }
+
+                c[i][j] = minCost + w[i][j];
+                r[i][j] = bestRoot;
+            }
+        }
+    }
+
+    void displayResults() {
+        cout << "\nWeight Matrix (w[i][j]):\n\n    ";
+        for (int j = 0; j <= n; j++)
+            cout << j << "\t";
+        cout << endl;
+
+        for (int i = 0; i <= n; i++) {
+            cout << i << "   ";
+            for (int j = 0; j <= n; j++) {
+                if (j >= i)
+                    cout << w[i][j] << "\t";
+                else
+                    cout << "\t";
+            }
+            cout << endl;
+        }
+
+        cout << "\nCost Matrix (c[i][j]):\n\n    ";
+        for (int j = 0; j <= n; j++)
+            cout << j << "\t";
+        cout << endl;
+
+        for (int i = 0; i <= n; i++) {
+            cout << i << "   ";
+            for (int j = 0; j <= n; j++) {
+                if (j >= i)
+                    cout << c[i][j] << "\t";
+                else
+                    cout << "\t";
+            }
+            cout << endl;
+        }
+
+        cout << "\nRoot Matrix (r[i][j]):\n\n    ";
+        for (int j = 0; j <= n; j++)
+            cout << j << "\t";
+        cout << endl;
+
+        for (int i = 0; i <= n; i++) {
+            cout << i << "   ";
+            for (int j = 0; j <= n; j++) {
+                if (j >= i)
+                    cout << r[i][j] << "\t";
+                else
+                    cout << "\t";
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    OBST tree;
+    tree.acceptData();
+    tree.calculateOBST();
+    tree.displayResults();
+    return 0;
+}
