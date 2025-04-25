@@ -1,5 +1,4 @@
 #include<iostream>
-#include<iomanip>
 using namespace std;
 
 class OBST
@@ -10,6 +9,7 @@ public:
     float p[10];
     float w[10][10];
     float c[10][10];
+    int r[10][10]; // root matrix
 
     void accept()
     {
@@ -50,6 +50,7 @@ public:
         for (int i = 0; i <= n; i++)
         {
             c[i][i] = 0;
+            r[i][i] = 0; // no root for empty subtree
         }
 
         for (int len = 1; len <= n; len++)
@@ -58,38 +59,40 @@ public:
             {
                 int j = i + len;
                 float mincost = 9999;
+                int root = 0;
                 for (int k = i + 1; k <= j; k++)
                 {
                     float cost = c[i][k - 1] + c[k][j];
                     if (cost < mincost)
                     {
                         mincost = cost;
+                        root = k;
                     }
                 }
                 c[i][j] = mincost + w[i][j];
+                r[i][j] = root; // store root
             }
         }
     }
 
     void displayWeight()
     {
-        cout << "\nWeight Matrix (w[i][j]):\n\n";
-        cout << setw(6) << " ";
+        cout << "\nWeight Matrix (w[i][j]):\n\n    ";
         for (int j = 0; j <= n; j++)
         {
-            cout << setw(8) << j;
+            cout << j << "\t";
         }
         cout << endl;
 
         for (int i = 0; i <= n; i++)
         {
-            cout << setw(6) << i;
+            cout << i << "   ";
             for (int j = 0; j <= n; j++)
             {
                 if (j >= i)
-                    cout << setw(8) << fixed << setprecision(2) << w[i][j];
+                    cout << w[i][j] << "\t";
                 else
-                    cout << setw(8) << " ";
+                    cout << "\t";
             }
             cout << endl;
         }
@@ -97,23 +100,45 @@ public:
 
     void displayCost()
     {
-        cout << "\nCost Matrix (c[i][j]):\n\n";
-        cout << setw(6) << " ";
+        cout << "\nCost Matrix (c[i][j]):\n\n    ";
         for (int j = 0; j <= n; j++)
         {
-            cout << setw(8) << j;
+            cout << j << "\t";
         }
         cout << endl;
 
         for (int i = 0; i <= n; i++)
         {
-            cout << setw(6) << i;
+            cout << i << "   ";
             for (int j = 0; j <= n; j++)
             {
                 if (j >= i)
-                    cout << setw(8) << fixed << setprecision(2) << c[i][j];
+                    cout << c[i][j] << "\t";
                 else
-                    cout << setw(8) << " ";
+                    cout << "\t";
+            }
+            cout << endl;
+        }
+    }
+
+    void displayRoot()
+    {
+        cout << "\nRoot Matrix (r[i][j]):\n\n    ";
+        for (int j = 0; j <= n; j++)
+        {
+            cout << j << "\t";
+        }
+        cout << endl;
+
+        for (int i = 0; i <= n; i++)
+        {
+            cout << i << "   ";
+            for (int j = 0; j <= n; j++)
+            {
+                if (j >= i)
+                    cout << r[i][j] << "\t";
+                else
+                    cout << "\t";
             }
             cout << endl;
         }
@@ -128,6 +153,7 @@ int main()
     o.cost_calculate();
     o.displayWeight();
     o.displayCost();
+    o.displayRoot();
 
     return 0;
 }
