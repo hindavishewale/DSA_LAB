@@ -95,7 +95,7 @@ class Graph
                     }
                 }
             }
-            if(parent!=-1 || child!=-1 )
+            if(parent!=-1 && child!=-1 )
             {
                 edge.push_back(parent);
                 edge.push_back(child);
