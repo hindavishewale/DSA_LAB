@@ -1,0 +1,124 @@
+#include<iostream>
+using namespace std;
+
+class HashTable {
+public:
+    int* h;          // Array to hold hash table entries
+    int* a;          // Array to mark the status of the slots (-1 for empty, 1 for occupied)
+    int capacity;     // Capacity of the hash table
+    int size;         // Current size of the hash table
+
+    HashTable() {
+        capacity = 10;   // Initial capacity of the hash table
+        size = 0;        // Initially, the size is 0
+        h = new int[capacity]; // Hash table array
+        a = new int[capacity]; // Array to track status (-1 empty, 1 occupied)
+
+        // Initialize all slots as empty (-1)
+        for (int i = 0; i < capacity; i++) {
+            a[i] = -1;
+        }
+    }
+
+    // Hash function
+    int hashfunction(int id) {
+        return id % capacity;
+    }
+
+    // Insert function with rehashing
+    void insert(int id) {
+        // Rehash if the table is full
+        if (size == capacity) {
+            rehash();
+        }
+
+        int index = hashfunction(id);
+        for (int i = 0; i < capacity; i++) {
+            int probeindex = (index + i) % capacity;  // Linear probing for collision resolution
+            if (a[probeindex] == -1 || a[probeindex] == -2) {
+                h[probeindex] = id;
+                a[probeindex] = 1;  // Mark this slot as occupied
+                size++;
+                cout << "Data inserted at index: " << probeindex << endl;
+                return;
+            }
+        }
+        cout << "Hash table full after rehashing! Something went wrong." << endl;
+    }
+
+    // Rehash the table when full
+    void rehash() {
+        cout << "Rehashing...\n";
+
+        // Save the old hash table and status array
+        int* oldH = h;
+        int* oldA = a;
+        int oldCapacity = capacity;
+
+        // Double the capacity
+        capacity *= 2;
+        h = new int[capacity];
+        a = new int[capacity];
+
+        // Initialize the new status array as empty (-1)
+        for (int i = 0; i < capacity; i++) {
+            a[i] = -1;
+        }
+
+        // Rehash the old data
+        for (int i = 0; i < oldCapacity; i++) {
+            if (oldA[i] == 1) {  // Only rehash the occupied slots
+                insert(oldH[i]);
+            }
+        }
+
+        // Free old memory
+        delete[] oldH;
+        delete[] oldA;
+
+        cout << "Rehashing complete. New capacity: " << capacity << endl;
+    }
+
+    // Display the hash table
+    void display() {
+        for (int i = 0; i < capacity; i++) {
+            if (a[i] == 1) {
+                cout << "Index: " << i << "\tID: " << h[i] << endl;
+            } else {
+                cout << "Index: " << i << "\tEmpty" << endl;
+            }
+        }
+    }
+
+    ~HashTable() {
+        delete[] h;
+        delete[] a;
+    }
+};
+
+int main() {
+    int id;
+    HashTable table;
+    int choice;
+    do {
+        cout << "1. Insert\n2. Display\n3. Exit\n";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter ID: ";
+                cin >> id;
+                table.insert(id);
+                break;
+            case 2:
+                table.display();
+                break;
+            case 3:
+                break;
+            default:
+                cout << "Invalid option. Please try again.\n";
+        }
+    } while (choice != 3);
+
+    return 0;
+}
