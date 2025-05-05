@@ -128,7 +128,7 @@ int main()
      Graph g(n,e);
      g.addcity();
      cout<<"enter"<<e<<"paths:"<<endl;
-     for(i=0;i<n;i++)
+     for(i=0;i<e;i++)
      {
          cin>>s1>>s2>>w;
          g.addedge(s1,s2,w);
